@@ -1,0 +1,46 @@
+def ai_move(board):
+    # 1. Tenta ganhar
+    for row, col in get_empty_cells(board):
+        board[row][col] = "O"
+        if check_winner(board, "O"):
+            return row, col
+        board[row][col] = " "
+
+    # 2. Bloqueia jogador
+    for row, col in get_empty_cells(board):
+        board[row][col] = "X"
+        if check_winner(board, "X"):
+            board[row][col] = "O"
+            return row, col
+        board[row][col] = " "
+
+    # 3. Caso contrário, joga aleatoriamente
+    return random.choice(get_empty_cells(board))
+
+def play_game():
+    board = [[" " for _ in range(3)] for _ in range(3)]
+    print("Bem-vindo ao Jogo da Velha! Você é X e a IA é O.")
+    print_board(board)
+
+    for turn in range(9):
+        if turn % 2 == 0:
+            row, col = player_move(board)
+            board[row][col] = "X"
+        else:
+            row, col = ai_move(board)
+            board[row][col] = "O"
+            print(f"IA jogou em ({row}, {col})")
+
+        print_board(board)
+
+        if check_winner(board, "X"):
+            print("Você venceu! :tada:")
+            return
+        elif check_winner(board, "O"):
+            print("A IA venceu! :cry:")
+            return
+
+    print("Empate! :handshake:")
+
+if __name__ == "__main__":
+    play_game()
